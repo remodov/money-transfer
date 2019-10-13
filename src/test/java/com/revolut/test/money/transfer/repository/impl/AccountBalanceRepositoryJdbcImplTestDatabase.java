@@ -1,0 +1,59 @@
+package com.revolut.test.money.transfer.repository.impl;
+
+import com.revolut.test.money.transfer.entity.AccountBalance;
+import com.revolut.test.money.transfer.repository.AccountBalanceRepository;
+import com.revolut.test.money.transfer.test.utils.TestDatabase;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.Optional;
+
+public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
+    private AccountBalanceRepository accountBalanceRepository = new AccountBalanceRepositoryJdbcImpl();
+
+    @Test
+    public void findAccountBalanceByAccountNoSuccess() {
+        Optional<AccountBalance> accountBalanceByAccountNo =
+                accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678901");
+
+        Assert.assertEquals(accountBalanceByAccountNo.get().getAccountNo(),"12345678912345678901");
+        Assert.assertEquals(accountBalanceByAccountNo.get().getAmount(), new Double(200));
+    }
+
+    @Test
+    public void findAccountBalanceByAccountNotFoundAndReturnEmptySuccess() {
+        Optional<AccountBalance> accountBalanceByAccountNo =
+                accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678911");
+
+        Assert.assertFalse(accountBalanceByAccountNo.isPresent());
+    }
+
+    @Test
+    public void updateAccountBalanceSuccess() {
+        AccountBalance accountBalanceFrom = new AccountBalance();
+        accountBalanceFrom.setAmount(400D);
+        accountBalanceFrom.setAccountNo("12345678912345678901");
+
+        AccountBalance accountBalanceTo = new AccountBalance();
+        accountBalanceTo.setAmount(500D);
+        accountBalanceTo.setAccountNo("12345678912345678903");
+
+        accountBalanceRepository.updateAccountBalance(accountBalanceFrom, accountBalanceTo);
+
+        Optional<AccountBalance> accountBalanceFromUpdated =
+                accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678901");
+
+        Optional<AccountBalance> accountBalanceToUpdated =
+                accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678903");
+
+        Assert.assertEquals(accountBalanceFromUpdated.get().getAmount(), accountBalanceFrom.getAmount());
+        Assert.assertEquals(accountBalanceToUpdated.get().getAmount(), accountBalanceTo.getAmount());
+    }
+
+    @Test
+    public void findAllAccountsSuccessLoaded() {
+        List<AccountBalance> allAccounts = accountBalanceRepository.findAllAccounts();
+        Assert.assertEquals(allAccounts.size() , 3);
+    }
+}

@@ -1,0 +1,17 @@
+package com.revolut.test.money.transfer.repository;
+
+import com.revolut.test.money.transfer.dto.TransactionStatus;
+import com.revolut.test.money.transfer.entity.AccountTransaction;
+
+import java.util.Optional;
+
+/**
+ * CRUD for work with AccountTransaction Entity
+ */
+public interface TransactionRepository {
+    AccountTransaction save(AccountTransaction accountTransaction);
+
+    Optional<AccountTransaction> getById(Long transactionId);
+
+    void updateStatusTransaction(Long transactionId, TransactionStatus transactionStatus);
+}
