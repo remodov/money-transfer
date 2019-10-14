@@ -42,7 +42,7 @@ public class TransactionRepositoryJdbcImpl implements TransactionRepository {
             return accountTransaction;
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
-            throw new MoneyTransferException();
+            throw new MoneyTransferException(e.getLocalizedMessage());
         }
     }
 
@@ -70,7 +70,7 @@ public class TransactionRepositoryJdbcImpl implements TransactionRepository {
             }
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
-            throw new MoneyTransferException();
+            throw new MoneyTransferException(e.getLocalizedMessage());
         }
     }
 
