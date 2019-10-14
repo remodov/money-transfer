@@ -9,10 +9,7 @@ import com.revolut.test.money.transfer.repository.TransactionRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Optional;
 
 public class TransactionRepositoryJdbcImpl implements TransactionRepository {
@@ -75,18 +72,23 @@ public class TransactionRepositoryJdbcImpl implements TransactionRepository {
     }
 
     @Override
-    public void updateStatusTransaction(Long transactionId, TransactionStatus transactionStatus) {
+    public void updateStatusTransaction(
+            Long transactionId,
+            TransactionStatus transactionStatus,
+            Connection connection
+    ) throws SQLException
+    {
         String sqlUpdate =
                 "update account_transactions set status = ? where id = ?";
 
-        try (Connection connection = DataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sqlUpdate))
+        try (PreparedStatement stmt = connection.prepareStatement(sqlUpdate))
         {
             stmt.setString(1, transactionStatus.name());
             stmt.setLong(2, transactionId);
 
             stmt.execute();
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            connection.rollback();
             logger.error(e.getLocalizedMessage(), e);
             throw new MoneyTransferException(e.getLocalizedMessage());
         }

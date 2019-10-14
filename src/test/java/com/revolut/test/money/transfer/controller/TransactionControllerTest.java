@@ -76,9 +76,6 @@ public class TransactionControllerTest {
 
         Mockito.verify(servletResponse, Mockito.times(1))
                 .setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-        Mockito.verify(transactionServiceMock, Mockito.times(1))
-                .updateStatus(3L, TransactionStatus.SUCCESS);
     }
 
     @Test
@@ -90,9 +87,6 @@ public class TransactionControllerTest {
 
         Mockito.verify(servletResponse, Mockito.times(1))
                 .setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-        Mockito.verify(transactionServiceMock, Mockito.times(0))
-                .updateStatus(1L, TransactionStatus.SUCCESS);
     }
 
     @Test
@@ -104,9 +98,6 @@ public class TransactionControllerTest {
 
         Mockito.verify(servletResponse, Mockito.times(1))
                 .setStatus(HttpServletResponse.SC_NOT_FOUND);
-
-        Mockito.verify(transactionServiceMock, Mockito.times(0))
-                .updateStatus(1L, TransactionStatus.SUCCESS);
     }
 
     @Test
@@ -128,9 +119,6 @@ public class TransactionControllerTest {
 
         Mockito.verify(servletResponse, Mockito.times(1))
                 .setStatus(HttpServletResponse.SC_BAD_REQUEST);
-
-        Mockito.verify(transactionServiceMock, Mockito.times(0))
-                .updateStatus(1L, TransactionStatus.SUCCESS);
     }
 
     @Test

@@ -33,11 +33,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void updateStatus(Long transactionID, TransactionStatus transactionStatus) {
-        transactionRepository.updateStatusTransaction(transactionID, transactionStatus);
-    }
-
-    @Override
     public Optional<TransactionTransferResponse> findById(Long transactionID) {
         return transactionRepository.getById(transactionID)
                                     .map(converter);

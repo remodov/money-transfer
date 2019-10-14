@@ -65,7 +65,6 @@ public class TransactionController extends HttpServlet {
                 transactionTransfer.get().getTransactionStatus() == TransactionStatus.INIT)
             {
                 transferMoneyService.transfer(transactionTransfer.get());
-                transactionService.updateStatus(transactionId, TransactionStatus.SUCCESS);
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);

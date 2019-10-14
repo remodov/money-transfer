@@ -1,31 +1,37 @@
 package com.revolut.test.money.transfer.service.impl;
 
-import com.revolut.test.money.transfer.dto.TransactionTransferRequest;
+import com.revolut.test.money.transfer.dto.TransactionTransferResponse;
 import com.revolut.test.money.transfer.entity.AccountBalance;
 import com.revolut.test.money.transfer.exception.MoneyTransferException;
 import com.revolut.test.money.transfer.repository.AccountBalanceRepository;
+import com.revolut.test.money.transfer.repository.TransactionRepository;
 import com.revolut.test.money.transfer.service.AccountLockService;
 import com.revolut.test.money.transfer.service.TransferMoneyService;
 import com.revolut.test.money.transfer.test.utils.TestDataFactory;
+import com.revolut.test.money.transfer.test.utils.TestDatabase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class TransferMoneyServiceImplTest {
+import static org.mockito.Matchers.eq;
+
+public class TransferMoneyServiceImplTest extends TestDatabase {
     private AccountBalanceRepository accountBalanceRepositoryMock = Mockito.mock(AccountBalanceRepository.class);
+    private TransactionRepository transactionRepository = Mockito.mock(TransactionRepository.class);
     private AccountLockService accountLockServiceMock = new AccountLocksServiceSimple(accountBalanceRepositoryMock);
 
     private TransferMoneyService transferMoneyServiceMock =
-            new TransferMoneyServiceImpl(accountBalanceRepositoryMock, accountLockServiceMock);
+            new TransferMoneyServiceImpl(accountBalanceRepositoryMock, transactionRepository, accountLockServiceMock);
 
     @Test
-    public void transferMoneyWithPositiveBalanceSuccess() {
+    public void transferMoneyWithPositiveBalanceSuccess() throws SQLException {
         AccountBalance accountFrom = new AccountBalance("12345678912345678901", new BigDecimal(200));
         AccountBalance accountTo = new AccountBalance("12345678912345678902",new BigDecimal(300));
 
@@ -40,14 +46,17 @@ public class TransferMoneyServiceImplTest {
 
         accountLockServiceMock.initAccountLocks();
 
-        TransactionTransferRequest transactionTransferRequest =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequest =
+                TestDataFactory.createTransactionTransferResponse();
 
         transferMoneyServiceMock.transfer(transactionTransferRequest);
 
         Mockito.verify(accountBalanceRepositoryMock, Mockito.times(1))
-                .updateAccountBalance(new AccountBalance("12345678912345678901",new BigDecimal("189.89")),
-                                      new AccountBalance("12345678912345678902",new BigDecimal("310.11")));
+                .update(eq(new AccountBalance("12345678912345678901", new BigDecimal("189.89"))), Mockito.anyObject());
+
+        Mockito.verify(accountBalanceRepositoryMock, Mockito.times(1))
+                .update(eq(new AccountBalance("12345678912345678902", new BigDecimal("310.11"))), Mockito.anyObject());
+
     }
 
     @Test(expected = MoneyTransferException.class)
@@ -66,8 +75,8 @@ public class TransferMoneyServiceImplTest {
 
         accountLockServiceMock.initAccountLocks();
 
-        TransactionTransferRequest transactionTransferRequest =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequest =
+                TestDataFactory.createTransactionTransferResponse();
 
         transferMoneyServiceMock.transfer(transactionTransferRequest);
     }
@@ -88,8 +97,8 @@ public class TransferMoneyServiceImplTest {
 
         accountLockServiceMock.initAccountLocks();
 
-        TransactionTransferRequest transactionTransferRequest =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequest =
+                TestDataFactory.createTransactionTransferResponse();
 
         transferMoneyServiceMock.transfer(transactionTransferRequest);
     }
@@ -110,8 +119,8 @@ public class TransferMoneyServiceImplTest {
 
         accountLockServiceMock.initAccountLocks();
 
-        TransactionTransferRequest transactionTransferRequest =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequest =
+                TestDataFactory.createTransactionTransferResponse();
 
         transferMoneyServiceMock.transfer(transactionTransferRequest);
     }
@@ -132,12 +141,12 @@ public class TransferMoneyServiceImplTest {
 
         accountLockServiceMock.initAccountLocks();
 
-        TransactionTransferRequest transactionTransferRequestFromTo =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequestFromTo =
+                TestDataFactory.createTransactionTransferResponse();
         transactionTransferRequestFromTo.setAmount(new BigDecimal(1));
 
-        TransactionTransferRequest transactionTransferRequestToFrom =
-                TestDataFactory.createTransactionTransferRequest();
+        TransactionTransferResponse transactionTransferRequestToFrom =
+                TestDataFactory.createTransactionTransferResponse();
         transactionTransferRequestToFrom.setAccountFrom(transactionTransferRequestFromTo.getAccountTo());
         transactionTransferRequestToFrom.setAccountTo(transactionTransferRequestFromTo.getAccountFrom());
         transactionTransferRequestToFrom.setAmount(new BigDecimal(1));

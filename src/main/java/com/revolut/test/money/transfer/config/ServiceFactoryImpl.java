@@ -35,13 +35,13 @@ public class ServiceFactoryImpl implements ServiceFactory {
     public AccountLockService createAccountLockService() {
         AccountLocksServiceSimple accountLocksServiceSimple =
                 new AccountLocksServiceSimple(createAccountBalanceRepository());
-        accountLocksServiceSimple.initAccountLocks();;
+        accountLocksServiceSimple.initAccountLocks();
         return accountLocksServiceSimple;
     }
 
     @Override
     public TransferMoneyService createTransferMoneyService() {
-        return new TransferMoneyServiceImpl(createAccountBalanceRepository(), createAccountLockService());
+        return new TransferMoneyServiceImpl(createAccountBalanceRepository(), createTransactionRepository(), createAccountLockService());
     }
 
     @Override

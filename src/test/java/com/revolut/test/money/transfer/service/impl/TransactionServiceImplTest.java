@@ -1,7 +1,6 @@
 package com.revolut.test.money.transfer.service.impl;
 
 import com.revolut.test.money.transfer.converter.FromAccountTransactionToTransactionTransferResponseConverter;
-import com.revolut.test.money.transfer.dto.TransactionStatus;
 import com.revolut.test.money.transfer.dto.TransactionTransferRequest;
 import com.revolut.test.money.transfer.dto.TransactionTransferResponse;
 import com.revolut.test.money.transfer.entity.AccountTransaction;
@@ -36,14 +35,6 @@ public class TransactionServiceImplTest {
                 transactionService.initTransaction(transactionTransferRequest);
 
         assertFields(transactionTransferResponse);
-    }
-
-    @Test
-    public void updateStatusSuccessInvokeOneTime() {
-        transactionService.updateStatus(1L, TransactionStatus.SUCCESS);
-
-        Mockito.verify(transactionRepositoryMock, Mockito.times(1))
-               .updateStatusTransaction(1L, TransactionStatus.SUCCESS);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.revolut.test.money.transfer.repository.impl;
 
+import com.revolut.test.money.transfer.config.DataSource;
 import com.revolut.test.money.transfer.entity.AccountBalance;
 import com.revolut.test.money.transfer.repository.AccountBalanceRepository;
 import com.revolut.test.money.transfer.test.utils.TestDatabase;
@@ -7,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +22,7 @@ public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
                 accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678901");
 
         Assert.assertEquals(accountBalanceByAccountNo.get().getAccountNo(),"12345678912345678901");
-        Assert.assertEquals(accountBalanceByAccountNo.get().getAmount(), new BigDecimal(200));
+        Assert.assertEquals(accountBalanceByAccountNo.get().getAmount(), new BigDecimal(200000));
     }
 
     @Test
@@ -31,7 +34,9 @@ public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
     }
 
     @Test
-    public void updateAccountBalanceSuccess() {
+    public void updateAccountBalanceSuccess() throws SQLException {
+        Connection connection = DataSource.getConnection();
+
         AccountBalance accountBalanceFrom = new AccountBalance();
         accountBalanceFrom.setAmount(new BigDecimal(400));
         accountBalanceFrom.setAccountNo("12345678912345678901");
@@ -40,7 +45,8 @@ public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
         accountBalanceTo.setAmount(new BigDecimal(500));
         accountBalanceTo.setAccountNo("12345678912345678903");
 
-        accountBalanceRepository.updateAccountBalance(accountBalanceFrom, accountBalanceTo);
+        accountBalanceRepository.update(accountBalanceFrom, connection);
+        accountBalanceRepository.update(accountBalanceTo, connection);
 
         Optional<AccountBalance> accountBalanceFromUpdated =
                 accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678901");

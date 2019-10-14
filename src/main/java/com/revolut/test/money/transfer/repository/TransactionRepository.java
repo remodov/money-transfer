@@ -3,6 +3,8 @@ package com.revolut.test.money.transfer.repository;
 import com.revolut.test.money.transfer.dto.TransactionStatus;
 import com.revolut.test.money.transfer.entity.AccountTransaction;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -13,5 +15,5 @@ public interface TransactionRepository {
 
     Optional<AccountTransaction> getById(Long transactionId);
 
-    void updateStatusTransaction(Long transactionId, TransactionStatus transactionStatus);
+    void updateStatusTransaction(Long transactionId, TransactionStatus transactionStatus, Connection connection) throws SQLException;
 }

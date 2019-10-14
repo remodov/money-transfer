@@ -39,34 +39,21 @@ public class AccountBalanceRepositoryJdbcImpl implements AccountBalanceRepositor
     }
 
     @Override
-    public void updateAccountBalance(AccountBalance accountBalanceFrom, AccountBalance accountBalanceTo) {
+    public void update(AccountBalance accountBalanceFrom, Connection connection) throws SQLException {
         String sqlUpdate = "update account_balance set balance = ? where account_no = ?";
 
-        try(Connection connection = DataSource.getConnection();
-            PreparedStatement updateBalanceStatement = connection.prepareStatement(sqlUpdate))
+        try(PreparedStatement updateBalanceStatement = connection.prepareStatement(sqlUpdate))
         {
-            connection.setAutoCommit(false);
+            updateBalanceStatement.setBigDecimal(1, accountBalanceFrom.getAmount());
+            updateBalanceStatement.setString(2, accountBalanceFrom.getAccountNo());
+            updateBalanceStatement.execute();
 
-            executeBalanceStatement(accountBalanceFrom, updateBalanceStatement);
-
-            executeBalanceStatement(accountBalanceTo, updateBalanceStatement);
-
-            connection.commit();
-
-            connection.setAutoCommit(true);
-
-            logger.debug("Update balance success from {} to {} ", accountBalanceFrom, accountBalanceTo);
+            logger.debug("Update balance success: {}", accountBalanceFrom);
         } catch (Exception e) {
+            connection.rollback();
             logger.error(e.getLocalizedMessage(), e);
             throw new MoneyTransferException(e.getLocalizedMessage());
         }
-    }
-
-    private void executeBalanceStatement(AccountBalance accountBalanceFrom,
-                                         PreparedStatement updateBalanceStatement) throws SQLException {
-        updateBalanceStatement.setBigDecimal(1, accountBalanceFrom.getAmount());
-        updateBalanceStatement.setString(2, accountBalanceFrom.getAccountNo());
-        updateBalanceStatement.execute();
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.revolut.test.money.transfer.repository;
 
 import com.revolut.test.money.transfer.entity.AccountBalance;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +16,7 @@ public interface AccountBalanceRepository {
     /**
      * Update amount from accountBalance from and update amount accountBalance to
      */
-    void updateAccountBalance(AccountBalance accountBalanceFrom, AccountBalance accountBalanceTo);
+    void update(AccountBalance accountBalance, Connection connection) throws SQLException;
 
     List<AccountBalance> findAllAccounts();
 }

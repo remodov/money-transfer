@@ -1,6 +1,5 @@
 package com.revolut.test.money.transfer.service;
 
-import com.revolut.test.money.transfer.dto.TransactionStatus;
 import com.revolut.test.money.transfer.dto.TransactionTransferRequest;
 import com.revolut.test.money.transfer.dto.TransactionTransferResponse;
 
@@ -15,11 +14,6 @@ public interface TransactionService {
      * Init transaction.
      */
     TransactionTransferResponse initTransaction(TransactionTransferRequest request);
-
-    /**
-     * Change transaction status.
-     */
-    void updateStatus(Long transactionID, TransactionStatus transactionStatus);
 
     Optional<TransactionTransferResponse> findById(Long transactionID);
 }

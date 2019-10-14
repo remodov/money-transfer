@@ -1,5 +1,6 @@
 package com.revolut.test.money.transfer.repository.impl;
 
+import com.revolut.test.money.transfer.config.DataSource;
 import com.revolut.test.money.transfer.dto.TransactionStatus;
 import com.revolut.test.money.transfer.entity.AccountTransaction;
 import com.revolut.test.money.transfer.exception.MoneyTransferException;
@@ -9,6 +10,8 @@ import com.revolut.test.money.transfer.test.utils.TestDatabase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class TransactionRepositoryJdbcImplTestDatabase extends TestDatabase {
@@ -80,11 +83,13 @@ public class TransactionRepositoryJdbcImplTestDatabase extends TestDatabase {
     }
 
     @Test
-    public void updateStatusTransactionSuccess() {
+    public void updateStatusTransactionSuccess() throws SQLException {
+        Connection connection = DataSource.getConnection();
+
         AccountTransaction accountTransactionSaved =
                 transactionRepository.save(TestDataFactory.createAccountTransaction());
 
-        transactionRepository.updateStatusTransaction(accountTransactionSaved.getTransactionId(), TransactionStatus.SUCCESS);
+        transactionRepository.updateStatusTransaction(accountTransactionSaved.getTransactionId(), TransactionStatus.SUCCESS, connection);
         accountTransactionSaved.setStatus(TransactionStatus.SUCCESS);
 
         Optional<AccountTransaction> accountTransactionFind =
