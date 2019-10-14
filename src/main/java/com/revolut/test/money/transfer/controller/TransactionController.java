@@ -61,7 +61,9 @@ public class TransactionController extends HttpServlet {
         try {
             Long transactionId = getTransactionIdFromPath(req);
             Optional<TransactionTransferResponse> transactionTransfer = transactionService.findById(transactionId);
-            if (transactionTransfer.isPresent()) {
+            if (transactionTransfer.isPresent() &&
+                transactionTransfer.get().getTransactionStatus() == TransactionStatus.INIT)
+            {
                 transferMoneyService.transfer(transactionTransfer.get());
                 transactionService.updateStatus(transactionId, TransactionStatus.SUCCESS);
                 resp.setStatus(HttpServletResponse.SC_NO_CONTENT);

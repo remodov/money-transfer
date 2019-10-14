@@ -48,11 +48,18 @@ public class TransactionControllerTest {
         Mockito.when(serviceFactoryMock.createValidateTransactionRequestService())
                 .thenReturn(new ValidateTransactionRequestServiceImpl());
 
+        TransactionTransferResponse transactionTransferResponseInit =
+                TestDataFactory.createTransactionTransferResponse();
+        transactionTransferResponseInit.setTransactionStatus(TransactionStatus.INIT);
+
         Mockito.when(transactionServiceMock.findById(1L))
                 .thenReturn(Optional.of(TestDataFactory.createTransactionTransferResponse()));
 
         Mockito.when(transactionServiceMock.findById(2L))
                 .thenReturn(Optional.empty());
+
+        Mockito.when(transactionServiceMock.findById(3L))
+                .thenReturn(Optional.of(transactionTransferResponseInit));
 
         Mockito.when(servletRequest.getInputStream())
                 .thenReturn(new TestDataFactory.DelegatingServletInputStream(System.in));
@@ -63,7 +70,7 @@ public class TransactionControllerTest {
     @Test
     public void startTransactionMoneyTransferSuccess() throws IOException {
         Mockito.when(servletRequest.getRequestURI())
-                .thenReturn("http://localhost:8080/transaction/1");
+                .thenReturn("http://localhost:8080/transaction/3");
 
         transactionController.doPut(servletRequest, servletResponse);
 
@@ -71,14 +78,25 @@ public class TransactionControllerTest {
                 .setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         Mockito.verify(transactionServiceMock, Mockito.times(1))
+                .updateStatus(3L, TransactionStatus.SUCCESS);
+    }
+
+    @Test
+    public void startTransactionMoneyWhenTransactionInSuccessStatusThenNotFoundSuccess() throws IOException {
+        Mockito.when(servletRequest.getRequestURI())
+                .thenReturn("http://localhost:8080/transaction/1");
+
+        transactionController.doPut(servletRequest, servletResponse);
+
+        Mockito.verify(servletResponse, Mockito.times(1))
+                .setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+        Mockito.verify(transactionServiceMock, Mockito.times(0))
                 .updateStatus(1L, TransactionStatus.SUCCESS);
     }
 
     @Test
     public void startTransactionMoneyTransferAndTransactionIdNotFoundSuccess() throws IOException {
-        Mockito.when(transactionServiceMock.findById(1L))
-                .thenReturn(Optional.empty());
-
         Mockito.when(servletRequest.getRequestURI())
                 .thenReturn("http://localhost:8080/transaction/1");
 
@@ -136,6 +154,7 @@ public class TransactionControllerTest {
         Mockito.verify(servletResponse, Mockito.times(1))
                 .setStatus(HttpServletResponse.SC_OK);
     }
+
 
     @Test
     public void getTransactionStatusByIdNotFoundSuccess() throws IOException {
