@@ -2,17 +2,19 @@ package com.revolut.test.money.transfer.entity;
 
 import com.revolut.test.money.transfer.dto.TransactionStatus;
 
+import java.math.BigDecimal;
+
 public class AccountTransaction {
     private Long transactionId;
     private String accountFrom;
     private String accountTo;
     private TransactionStatus status;
-    private Double amount;
+    private BigDecimal amount;
 
     public AccountTransaction(String accountFrom,
                               String accountTo,
                               TransactionStatus status,
-                              Double amount,
+                              BigDecimal amount,
                               Long transactionId
     ) {
         this.accountFrom = accountFrom;
@@ -54,11 +56,11 @@ public class AccountTransaction {
         this.status = status;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

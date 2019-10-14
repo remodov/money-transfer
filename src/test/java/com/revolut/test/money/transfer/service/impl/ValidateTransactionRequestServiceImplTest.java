@@ -6,6 +6,7 @@ import com.revolut.test.money.transfer.test.utils.TestDataFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class ValidateTransactionRequestServiceImplTest {
@@ -16,7 +17,7 @@ public class ValidateTransactionRequestServiceImplTest {
     public void validateGetAmountLessZeroMessageSuccess() {
         TransactionTransferRequest transactionTransferRequest =
                 TestDataFactory.createTransactionTransferRequest();
-        transactionTransferRequest.setAmount(-1D);
+        transactionTransferRequest.setAmount(new BigDecimal(-1));
 
         Optional<String> errorMessage =
                 validateTransactionRequestService.validate(transactionTransferRequest);

@@ -9,6 +9,8 @@ import com.revolut.test.money.transfer.service.TransferMoneyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final static Logger logger = LoggerFactory.getLogger(TransferMoneyServiceImpl.class);
 
@@ -44,12 +46,12 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
                             accountBalanceRepository.findAccountBalanceByAccountNo(transactionTransferRequest.getAccountTo())
                                                     .orElseThrow(() -> new MoneyTransferException("Account not found: " + transactionTransferRequest.getAccountTo()));
 
-                    if ((balanceFrom.getAmount() - transactionTransferRequest.getAmount()) < 0) {
+                    if ((balanceFrom.getAmount().subtract(transactionTransferRequest.getAmount())).compareTo(BigDecimal.ZERO) < 0) {
                         throw new MoneyTransferException("Not enough money in your account");
                     }
 
-                    balanceFrom.setAmount(balanceFrom.getAmount() - transactionTransferRequest.getAmount());
-                    balanceTo.setAmount(balanceTo.getAmount() + transactionTransferRequest.getAmount());
+                    balanceFrom.setAmount(balanceFrom.getAmount().subtract(transactionTransferRequest.getAmount()));
+                    balanceTo.setAmount(balanceTo.getAmount().add(transactionTransferRequest.getAmount()));
 
                     accountBalanceRepository.updateAccountBalance(balanceFrom, balanceTo);
 

@@ -1,6 +1,6 @@
 CREATE TABLE ACCOUNT_BALANCE (
     account_no VARCHAR(20) PRIMARY KEY,
-    balance DOUBLE NOT NULL
+    balance DECIMAL NOT NULL
 );
 
 CREATE TABLE account_transactions (
@@ -9,7 +9,7 @@ CREATE TABLE account_transactions (
     account_no_to VARCHAR(20) NOT NULL,
     status VARCHAR(20) NOT NULL,
     init_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    amount DOUBLE NOT NULL
+    amount DECIMAL NOT NULL
 );
 
 INSERT INTO account_balance(account_no, BALANCE) VALUES

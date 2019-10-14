@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class AccountLocksServiceSimpleTest {
@@ -16,8 +17,8 @@ public class AccountLocksServiceSimpleTest {
         AccountBalanceRepository accountBalanceRepositoryMock = Mockito.mock(AccountBalanceRepository.class);
 
         Mockito.when(accountBalanceRepositoryMock.findAllAccounts())
-               .thenReturn(Arrays.asList(new AccountBalance("12345678912345678901",200D),
-                                         new AccountBalance("12345678912345678902",300D)));
+               .thenReturn(Arrays.asList(new AccountBalance("12345678912345678901",new BigDecimal(200)),
+                                         new AccountBalance("12345678912345678902",new BigDecimal(300))));
 
         AccountLockService accountLockService =
                 new AccountLocksServiceSimple(accountBalanceRepositoryMock);

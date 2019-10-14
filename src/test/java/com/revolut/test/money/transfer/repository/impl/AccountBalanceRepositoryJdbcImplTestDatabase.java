@@ -6,6 +6,7 @@ import com.revolut.test.money.transfer.test.utils.TestDatabase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
                 accountBalanceRepository.findAccountBalanceByAccountNo("12345678912345678901");
 
         Assert.assertEquals(accountBalanceByAccountNo.get().getAccountNo(),"12345678912345678901");
-        Assert.assertEquals(accountBalanceByAccountNo.get().getAmount(), new Double(200));
+        Assert.assertEquals(accountBalanceByAccountNo.get().getAmount(), new BigDecimal(200));
     }
 
     @Test
@@ -32,11 +33,11 @@ public class AccountBalanceRepositoryJdbcImplTestDatabase extends TestDatabase {
     @Test
     public void updateAccountBalanceSuccess() {
         AccountBalance accountBalanceFrom = new AccountBalance();
-        accountBalanceFrom.setAmount(400D);
+        accountBalanceFrom.setAmount(new BigDecimal(400));
         accountBalanceFrom.setAccountNo("12345678912345678901");
 
         AccountBalance accountBalanceTo = new AccountBalance();
-        accountBalanceTo.setAmount(500D);
+        accountBalanceTo.setAmount(new BigDecimal(500));
         accountBalanceTo.setAccountNo("12345678912345678903");
 
         accountBalanceRepository.updateAccountBalance(accountBalanceFrom, accountBalanceTo);

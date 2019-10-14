@@ -1,11 +1,12 @@
 package com.revolut.test.money.transfer.dto;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class TransactionTransferRequest {
     private String accountFrom;
     private String accountTo;
-    private Double amount;
+    private BigDecimal amount;
 
     public String getAccountFrom() {
         return accountFrom;
@@ -23,11 +24,11 @@ public class TransactionTransferRequest {
         this.accountTo = accountTo;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -29,7 +29,7 @@ public class TransactionRepositoryJdbcImpl implements TransactionRepository {
             insertStatement.setString(1, accountTransaction.getAccountFrom());
             insertStatement.setString(2, accountTransaction.getAccountTo());
             insertStatement.setString(3, accountTransaction.getStatus().name());
-            insertStatement.setDouble(4, accountTransaction.getAmount());
+            insertStatement.setBigDecimal(4, accountTransaction.getAmount());
 
             insertStatement.execute();
 
@@ -60,7 +60,7 @@ public class TransactionRepositoryJdbcImpl implements TransactionRepository {
                 if (rs.next()) {
                     return Optional.of(new AccountTransactionBuilder()
                             .setStatus(TransactionStatus.valueOf(rs.getString("status")))
-                            .setAmount(rs.getDouble("amount"))
+                            .setAmount(rs.getBigDecimal("amount"))
                             .setAccountTo(rs.getString("account_no_to"))
                             .setAccountFrom(rs.getString("account_no_from"))
                             .setTransactionId(transactionId)

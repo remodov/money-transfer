@@ -1,12 +1,13 @@
 package com.revolut.test.money.transfer.entity;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class AccountBalance {
     private String accountNo;
-    private Double amount;
+    private BigDecimal amount;
 
-    public AccountBalance(String accountNo, Double amount) {
+    public AccountBalance(String accountNo, BigDecimal amount) {
         this.accountNo = accountNo;
         this.amount = amount;
     }
@@ -22,11 +23,11 @@ public class AccountBalance {
         this.accountNo = accountNo;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

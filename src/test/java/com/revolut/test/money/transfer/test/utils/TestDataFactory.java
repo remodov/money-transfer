@@ -10,11 +10,12 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 
 public class TestDataFactory {
     public static TransactionTransferRequest createTransactionTransferRequest() {
         TransactionTransferRequest transactionTransferRequest = new TransactionTransferRequest();
-        transactionTransferRequest.setAmount(10.11D);
+        transactionTransferRequest.setAmount(new BigDecimal("10.11"));
         transactionTransferRequest.setAccountFrom("12345678912345678901");
         transactionTransferRequest.setAccountTo("12345678912345678902");
 
@@ -23,7 +24,7 @@ public class TestDataFactory {
 
     public static TransactionTransferResponse createTransactionTransferResponse() {
         TransactionTransferResponse transactionTransferResponse = new TransactionTransferResponse();
-        transactionTransferResponse.setAmount(10.11D);
+        transactionTransferResponse.setAmount(new BigDecimal("10.11"));
         transactionTransferResponse.setAccountFrom("12345678912345678901");
         transactionTransferResponse.setAccountTo("12345678912345678902");
         transactionTransferResponse.setTransactionId(1L);
@@ -37,7 +38,7 @@ public class TestDataFactory {
                 new AccountTransactionBuilder()
                         .setAccountFrom("12345678912345678912")
                         .setAccountTo("12345678912345678912")
-                        .setAmount(200D)
+                        .setAmount(new BigDecimal(200))
                         .setStatus(TransactionStatus.INIT)
                         .createAccountTransaction();
 

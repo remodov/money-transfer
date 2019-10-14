@@ -1,5 +1,6 @@
 package com.revolut.test.money.transfer.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revolut.test.money.transfer.converter.FromAccountTransactionToTransactionTransferResponseConverter;
 import com.revolut.test.money.transfer.dto.TransactionTransferResponse;
@@ -60,6 +61,8 @@ public class ServiceFactoryImpl implements ServiceFactory {
 
     @Override
     public ObjectMapper createObjectMapper() {
-        return new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        return objectMapper;
     }
 }

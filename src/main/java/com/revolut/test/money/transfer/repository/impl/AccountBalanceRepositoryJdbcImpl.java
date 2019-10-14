@@ -27,7 +27,7 @@ public class AccountBalanceRepositoryJdbcImpl implements AccountBalanceRepositor
                 if (rs.next()) {
                     AccountBalance accountBalance = new AccountBalance();
                     accountBalance.setAccountNo(rs.getString("account_no"));
-                    accountBalance.setAmount(rs.getDouble("balance"));
+                    accountBalance.setAmount(rs.getBigDecimal("balance"));
                     return Optional.of(accountBalance);
                 }
                 return Optional.empty();
@@ -64,7 +64,7 @@ public class AccountBalanceRepositoryJdbcImpl implements AccountBalanceRepositor
 
     private void executeBalanceStatement(AccountBalance accountBalanceFrom,
                                          PreparedStatement updateBalanceStatement) throws SQLException {
-        updateBalanceStatement.setDouble(1, accountBalanceFrom.getAmount());
+        updateBalanceStatement.setBigDecimal(1, accountBalanceFrom.getAmount());
         updateBalanceStatement.setString(2, accountBalanceFrom.getAccountNo());
         updateBalanceStatement.execute();
     }
@@ -79,7 +79,7 @@ public class AccountBalanceRepositoryJdbcImpl implements AccountBalanceRepositor
                 while (rs.next()) {
                     AccountBalance accountBalance = new AccountBalance();
                     accountBalance.setAccountNo(rs.getString("account_no"));
-                    accountBalance.setAmount(rs.getDouble("balance"));
+                    accountBalance.setAmount(rs.getBigDecimal("balance"));
 
                     allAccounts.add(accountBalance);
                 }

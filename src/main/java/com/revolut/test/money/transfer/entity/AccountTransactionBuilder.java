@@ -2,11 +2,13 @@ package com.revolut.test.money.transfer.entity;
 
 import com.revolut.test.money.transfer.dto.TransactionStatus;
 
+import java.math.BigDecimal;
+
 public class AccountTransactionBuilder {
     private String accountFrom;
     private String accountTo;
     private TransactionStatus status;
-    private Double amount;
+    private BigDecimal amount;
     private Long transactionId;
 
     public AccountTransactionBuilder setTransactionId(Long transactionId) {
@@ -29,7 +31,7 @@ public class AccountTransactionBuilder {
         return this;
     }
 
-    public AccountTransactionBuilder setAmount(Double amount) {
+    public AccountTransactionBuilder setAmount(BigDecimal amount) {
         this.amount = amount;
         return this;
     }

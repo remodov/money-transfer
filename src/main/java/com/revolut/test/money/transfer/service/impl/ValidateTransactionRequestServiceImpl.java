@@ -3,12 +3,13 @@ package com.revolut.test.money.transfer.service.impl;
 import com.revolut.test.money.transfer.dto.TransactionTransferRequest;
 import com.revolut.test.money.transfer.service.ValidateTransactionRequestService;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 
 public class ValidateTransactionRequestServiceImpl implements ValidateTransactionRequestService {
     public Optional<String> validate(TransactionTransferRequest transactionTransferRequest) {
-        if (transactionTransferRequest.getAmount() == null || transactionTransferRequest.getAmount() <= 0) {
+        if (transactionTransferRequest.getAmount() == null || transactionTransferRequest.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             return Optional.of("Wrong amount value, must be more then zero");
         }
 

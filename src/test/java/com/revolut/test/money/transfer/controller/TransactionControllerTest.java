@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class TransactionControllerTest {
@@ -197,7 +198,7 @@ public class TransactionControllerTest {
 
     @Test
     public void initTransactionNorValidMessageWithWrongAmountSuccess() throws IOException {
-        transactionTransferRequest.setAmount(0D);
+        transactionTransferRequest.setAmount(BigDecimal.ZERO);
 
         Mockito.when(servletRequest.getInputStream())
                 .thenReturn(new TestDataFactory.DelegatingServletInputStream(
