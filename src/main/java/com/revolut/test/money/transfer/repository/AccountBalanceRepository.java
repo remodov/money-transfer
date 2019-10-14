@@ -13,9 +13,6 @@ import java.util.Optional;
 public interface AccountBalanceRepository {
     Optional<AccountBalance> findAccountBalanceByAccountNo(String accountNo);
 
-    /**
-     * Update amount from accountBalance from and update amount accountBalance to
-     */
     void update(AccountBalance accountBalance, Connection connection) throws SQLException;
 
     List<AccountBalance> findAllAccounts();

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class TransferMoneyServiceImpl implements TransferMoneyService {
     private final static Logger logger = LoggerFactory.getLogger(TransferMoneyServiceImpl.class);
@@ -60,18 +61,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
                     balanceFrom.setAmount(balanceFrom.getAmount().subtract(transactionTransferRequest.getAmount()));
                     balanceTo.setAmount(balanceTo.getAmount().add(transactionTransferRequest.getAmount()));
 
-                    try (Connection connection = DataSource.getConnection()){
-                        connection.setAutoCommit(false);
-
-                        accountBalanceRepository.update(balanceFrom, connection);
-                        accountBalanceRepository.update(balanceTo, connection);
-                        transactionRepository.updateStatusTransaction(transactionTransferRequest.getTransactionId(),
-                                                                      TransactionStatus.SUCCESS,
-                                                                      connection);
-
-                        connection.commit();
-                        connection.setAutoCommit(true);
-                    }
+                    updateBalanceInDataBase(transactionTransferRequest, balanceFrom, balanceTo);
 
                     logger.debug("End transaction transfer: {}", transactionTransferRequest);
                 }
@@ -80,6 +70,21 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
         catch (Exception e) {
             logger.error(e.getLocalizedMessage(),e);
             throw new MoneyTransferException(e.getLocalizedMessage());
+        }
+    }
+
+    private void updateBalanceInDataBase(TransactionTransferResponse transactionTransferRequest, AccountBalance balanceFrom, AccountBalance balanceTo) throws SQLException {
+        try (Connection connection = DataSource.getConnection()){
+            connection.setAutoCommit(false);
+
+            accountBalanceRepository.update(balanceFrom, connection);
+            accountBalanceRepository.update(balanceTo, connection);
+            transactionRepository.updateStatusTransaction(transactionTransferRequest.getTransactionId(),
+                                                          TransactionStatus.SUCCESS,
+                                                          connection);
+
+            connection.commit();
+            connection.setAutoCommit(true);
         }
     }
 }
